@@ -1,45 +1,42 @@
 # mcp-server-deepsite MCP Server
 
-A Model Context Protocol server
+A Model Context Protocol server for DeepSite integration.
 
-This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
-
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
+This is a TypeScript-based MCP server that implements integration with DeepSite services. It provides a bridge between MCP and DeepSite's chat capabilities.
 
 ## Features
 
-### Resources
-- List and access notes via `note://` URIs
-- Each note has a title, content and metadata
-- Plain text mime type for simple content access
-
 ### Tools
-- `create_note` - Create new text notes
-  - Takes title and content as required parameters
-  - Stores note in server state
 
-### Prompts
-- `summarize_notes` - Generate a summary of all stored notes
-  - Includes all note contents as embedded resources
-  - Returns structured prompt for LLM summarization
+- `deepsite_chat` - Interact with DeepSite chat API
+  - Takes content as a required parameter
+  - Returns chat responses from DeepSite service
+  - Handles API authentication and error cases
+
+### Configuration
+
+- API Key configuration through:
+  - Command line argument: `--deepsite_api_key=YOUR_KEY`
+  - Environment variable: `DEEPSITE_API_KEY`
 
 ## Development
 
 Install dependencies:
+
 ```bash
-npm install
+pnpm install
 ```
 
 Build the server:
+
 ```bash
-npm run build
+pnpm run build
 ```
 
 For development with auto-rebuild:
+
 ```bash
-npm run watch
+pnpm run watch
 ```
 
 ## Installation
@@ -53,7 +50,8 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "mcp-server-deepsite": {
-      "command": "/path/to/mcp-server-deepsite/build/index.js"
+      "command": "/path/to/mcp-server-deepsite/build/index.js",
+      "args": ["--deepsite_api_key=YOUR_API_KEY"]
     }
   }
 }
@@ -64,7 +62,22 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 Since MCP servers communicate over stdio, debugging can be challenging. We recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is available as a package script:
 
 ```bash
-npm run inspector
+pnpm run inspector
 ```
 
 The Inspector will provide a URL to access debugging tools in your browser.
+
+## Project Structure
+
+- `src/` - Source code directory
+  - `index.ts` - Main server entry point and MCP server implementation
+  - `deepsite.ts` - DeepSite API client implementation
+  - `hash.ts` - UUID generation utilities
+- `build/` - Compiled JavaScript output
+- `tsconfig.json` - TypeScript configuration
+
+## Dependencies
+
+- @modelcontextprotocol/sdk: MCP protocol implementation
+- zod: Runtime type checking and validation
+- TypeScript for type safety
